@@ -1,0 +1,15 @@
+# Development profile configuration
+spring:
+  cassandra:
+    keyspace-name: identity
+    contact-points: localhost
+    port: 9042
+    local-datacenter: datacenter1
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+logging:
+  level:
+    com.lifeinventory: DEBUG
+    org.springframework.security: DEBUG

@@ -1,0 +1,46 @@
+server:
+  port: 8180
+
+spring:
+  application:
+    name: identity-service
+
+  cassandra:
+    keyspace-name: identity
+    contact-points: ${CASSANDRA_HOST:localhost}
+    port: ${CASSANDRA_PORT:9042}
+    local-datacenter: ${CASSANDRA_DC:datacenter1}
+    schema-action: none
+
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+# Security
+security:
+  jwt:
+    secret: ${JWT_SECRET:identity-dev-jwt-secret-change-me}
+    access-token-expiration: 3600000    # 1 hour
+    refresh-token-expiration: 2592000000 # 30 days
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# Logging
+logging:
+  level:
+    root: INFO
+    com.lifeinventory: INFO
