@@ -22,3 +22,7 @@ Thumbs.db
 
 # Test output
 out/
+
+# Environment
+.env
+.env.*
