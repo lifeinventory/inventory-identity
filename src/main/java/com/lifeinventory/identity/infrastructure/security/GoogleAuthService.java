@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -18,11 +19,24 @@ public class GoogleAuthService {
 
     private final GoogleIdTokenVerifier verifier;
 
-    public GoogleAuthService(@Value("${security.google.client-id}") String clientId) {
+    public GoogleAuthService(
+            @Value("${security.google.client-id}") String webClientId,
+            @Value("${security.google.ios-client-id:}") String iosClientId,
+            @Value("${security.google.android-client-id:}") String androidClientId) {
+
+        List<String> clientIds = new ArrayList<>();
+        clientIds.add(webClientId);
+        if (iosClientId != null && !iosClientId.isEmpty()) {
+            clientIds.add(iosClientId);
+        }
+        if (androidClientId != null && !androidClientId.isEmpty()) {
+            clientIds.add(androidClientId);
+        }
+
         this.verifier = new GoogleIdTokenVerifier.Builder(
                 new NetHttpTransport(),
                 GsonFactory.getDefaultInstance())
-                .setAudience(Collections.singletonList(clientId))
+                .setAudience(clientIds)
                 .build();
     }
 
